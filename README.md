@@ -1,2 +1,2 @@
 # AICompanion
-## Next 13, React, Clerk, Stripe, Prisma, MySQL, Tailwind, ShadCN, Next-Themes
+## Next 13, React, Clerk, Stripe, Prisma, PostgreSQL, Tailwind, ShadCN, Next-Themes

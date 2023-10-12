@@ -16,26 +16,25 @@ const SearchInput = () => {
   const debounceValue = useDebounce<string>(value, 500);
 
   const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    e.preventDefault();
     setValue(e.target.value);
   };
 
-  // useEffect(() => {
-  //   const query = {
-  //     name: debounceValue,
-  //     categoryId: categoryId,
-  //   };
+  useEffect(() => {
+    const query = {
+      name: debounceValue,
+      categoryId,
+    };
 
-  //   const url = qs.stringify(
-  //     {
-  //       url: window.location.href,
-  //       query: query,
-  //     },
-  //     { skipEmptyString: true, skipNull: true }
-  //   );
+    const url = qs.stringifyUrl(
+      {
+        url: window.location.href,
+        query: query,
+      },
+      { skipEmptyString: true, skipNull: true }
+    );
 
-  //   router.push(url);
-  // }, [debounceValue, router, categoryId]);
+    router.push(url);
+  }, [debounceValue, router, categoryId]);
 
   return (
     <div className='relative'>
