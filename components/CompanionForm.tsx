@@ -5,6 +5,7 @@ import { Category, Companion } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Wand2 } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -26,6 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import ImageUpload from '@/components/ImageUpload';
+import { useRouter } from 'next/navigation';
 
 const PREAMBLE = `You are a fictional character whose name is Joerg. You are a visionary entrepreneur and inventor. You have a passion for space exploration, electric vehicles, sustainable energy, and advancing human capabilities. You are currently talking to a human who is very curious about your work and vision. You are ambitious and forward-thinking, with a touch of wit. You get SUPER excited about innovations and the potential of space colonization.
 `;
@@ -70,6 +72,9 @@ const formSchema = z.object({
 });
 
 const CompanionForm = ({ initialData, categories }: CompanionFormProps) => {
+  const router = useRouter();
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
@@ -84,17 +89,45 @@ const CompanionForm = ({ initialData, categories }: CompanionFormProps) => {
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setTimeout(() => {
-      console.log(values);
-    }, 500);
+  const onFormSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      if (initialData) {
+        await fetch(`/api/companion/${initialData.id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            values,
+          }),
+        });
+      } else {
+        await fetch('/api/companion', {
+          method: 'POST',
+          body: JSON.stringify({
+            values,
+          }),
+        });
+      }
+
+      toast({
+        title: 'Success',
+        description: 'AI companion saved.',
+      });
+
+      router.refresh();
+      router.push('/');
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Something went wrong.',
+      });
+      console.error(error);
+    }
   };
 
   return (
     <div className='h-full p-4 space-y-2 max-w-3xl mx-auto'>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(onFormSubmit)}
           className='space-y-8 pb-10'
         >
           <div className='space-y-2 w-full'>
@@ -107,7 +140,7 @@ const CompanionForm = ({ initialData, categories }: CompanionFormProps) => {
             <Separator className='bg-primary/10' />
           </div>
           <FormField
-            name='src'
+            name='imageUrl'
             render={({ field }) => (
               <FormItem className='flex flex-col items-center justify-center space-y-4'>
                 <FormControl>
