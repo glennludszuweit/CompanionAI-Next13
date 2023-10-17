@@ -4,9 +4,7 @@ import SearchInput from '@/components/SearchInput';
 import prismadb from '@/lib/prismadb';
 
 export default async function Home() {
-  const categories: Category[] = await prismadb.category.findMany();
-
-  console.log(categories);
+  const categories = await prismadb.category.findMany();
 
   return (
     <div className='h-full p-4 space-y-2'>
