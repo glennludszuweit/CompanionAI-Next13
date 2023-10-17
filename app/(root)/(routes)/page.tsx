@@ -1,9 +1,15 @@
-import { Category } from '@prisma/client';
 import Categories from '@/components/Categories';
 import SearchInput from '@/components/SearchInput';
 import prismadb from '@/lib/prismadb';
 
-export default async function Home() {
+interface RootPageProps {
+  searchParams: {
+    categoryId: string;
+    name: string;
+  };
+}
+
+export default async function RootPage() {
   const categories = await prismadb.category.findMany();
 
   return (

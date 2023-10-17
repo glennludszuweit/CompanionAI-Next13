@@ -7,7 +7,9 @@ interface CompanionIdPageProps {
   };
 }
 
-async function CompanionIdPage({ params }: CompanionIdPageProps) {
+export default async function CompanionIdPage({
+  params,
+}: CompanionIdPageProps) {
   const companion = await prismadb.companion?.findUnique({
     where: {
       id: params.companionId,
@@ -18,5 +20,3 @@ async function CompanionIdPage({ params }: CompanionIdPageProps) {
 
   return <CompanionForm initialData={companion} categories={categories} />;
 }
-
-export default CompanionIdPage;
