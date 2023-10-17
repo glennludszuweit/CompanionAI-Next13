@@ -47,7 +47,7 @@ export const PATCH = async (
       },
     });
 
-    return NextResponse.json(companion);
+    return NextResponse.json(companion, { status: 201 });
   } catch (error) {
     console.error('[COMPANION_PATCH]:', error);
     return new NextResponse('Internal server error.', { status: 500 });

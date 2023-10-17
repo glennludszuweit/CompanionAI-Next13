@@ -37,7 +37,7 @@ export const POST = async (req: Request) => {
       },
     });
 
-    return NextResponse.json(companion);
+    return NextResponse.json(companion, { status: 201 });
   } catch (error) {
     console.error('[COMPANION_POST]:', error);
     return new NextResponse('Internal server error.', { status: 500 });
