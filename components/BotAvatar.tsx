@@ -1,13 +1,14 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 interface BotAvatarProps {
   imageUrl: string;
+  style?: string;
 }
 
-const BotAvatar = ({ imageUrl }: BotAvatarProps) => {
+const BotAvatar = ({ imageUrl, style }: BotAvatarProps) => {
   return (
-    <Avatar className='w-12 h-12'>
-      <AvatarImage src={imageUrl} />
+    <Avatar className={style}>
+      <AvatarImage src={imageUrl} className='object-cover' />
     </Avatar>
   );
 };
