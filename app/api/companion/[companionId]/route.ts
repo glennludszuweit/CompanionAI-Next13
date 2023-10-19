@@ -53,3 +53,27 @@ export const PATCH = async (
     return new NextResponse('Internal server error.', { status: 500 });
   }
 };
+
+export const DELETE = async (
+  req: Request,
+  { params }: { params: { companionId: string } }
+) => {
+  try {
+    const user = await currentUser();
+
+    if (!user || !user.id || !user.firstName) {
+      return new NextResponse('Unauthorized.', { status: 401 });
+    }
+
+    const companion = await prismadb.companion.delete({
+      where: {
+        creatorId: user.id,
+        id: params.companionId,
+      },
+    });
+    return NextResponse.json(companion, { status: 200 });
+  } catch (error) {
+    console.error('[COMPANION_DELETE]:', error);
+    return new NextResponse('Internal server error.', { status: 500 });
+  }
+};

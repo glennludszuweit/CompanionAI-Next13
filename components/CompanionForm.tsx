@@ -91,15 +91,16 @@ const CompanionForm = ({ initialData, categories }: CompanionFormProps) => {
 
   const onFormSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      let response;
       if (initialData) {
-        await fetch(`/api/companion/${initialData.id}`, {
+        response = await fetch(`/api/companion/${initialData.id}`, {
           method: 'PATCH',
           body: JSON.stringify({
             values,
           }),
         });
       } else {
-        await fetch('/api/companion', {
+        response = await fetch('/api/companion', {
           method: 'POST',
           body: JSON.stringify({
             values,
@@ -107,18 +108,20 @@ const CompanionForm = ({ initialData, categories }: CompanionFormProps) => {
         });
       }
 
-      toast({
-        title: 'Success',
-        description: 'AI companion saved.',
-      });
-
-      router.refresh();
-      router.push('/');
+      if (response.ok) {
+        toast({
+          title: 'Success',
+          description: 'AI companion saved.',
+        });
+        router.refresh();
+        router.push('/');
+      } else {
+        toast({
+          variant: 'destructive',
+          description: 'Something went wrong.',
+        });
+      }
     } catch (error) {
-      toast({
-        variant: 'destructive',
-        description: 'Something went wrong.',
-      });
       console.error(error);
     }
   };

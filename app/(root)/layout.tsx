@@ -1,7 +1,11 @@
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className='h-full'>
       <Navbar />
@@ -11,6 +15,4 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <main className='md:pl-20 pt-16 h-full'>{children}</main>
     </div>
   );
-};
-
-export default RootLayout;
+}
