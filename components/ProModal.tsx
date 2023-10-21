@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useProModal } from '@/hooks/use-pro-modal';
 import {
   Dialog,
@@ -17,6 +17,7 @@ const ProModal = () => {
   const proModal = useProModal();
   const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
 
   const onSubscribe = async () => {
     try {
@@ -39,6 +40,12 @@ const ProModal = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
 
   return (
     <Dialog open={proModal.isOpen} onOpenChange={proModal.close}>
