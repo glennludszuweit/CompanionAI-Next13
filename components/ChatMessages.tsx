@@ -48,7 +48,7 @@ const ChatMessages = ({
           key={message.content}
           role={message.role}
           content={message.content}
-          imageUrl={message.imageUrl}
+          imageUrl={companion.imageUrl}
         />
       ))}
 
