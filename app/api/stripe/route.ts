@@ -1,5 +1,5 @@
-import { auth, currentUser } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
+import { auth, currentUser } from '@clerk/nextjs';
 import { stripe } from '@/lib/stripe';
 import { absoluteUrl } from '@/lib/utils';
 import prismadb from '@/lib/prismadb';
@@ -19,14 +19,13 @@ export async function GET() {
         userId,
       },
     });
+
     if (userSubscription && userSubscription.stripeCustomerId) {
       const stripeSession = await stripe.billingPortal.sessions.create({
         customer: userSubscription.stripeCustomerId,
         return_url: settingsUrl,
       });
-      return new NextResponse(JSON.stringify({ url: stripeSession.url }), {
-        status: 201,
-      });
+      return new NextResponse(JSON.stringify({ url: stripeSession.url }));
     }
 
     const newCustomerStripeSession = await stripe.checkout.sessions.create({
@@ -57,10 +56,7 @@ export async function GET() {
       },
     });
     return new NextResponse(
-      JSON.stringify({ url: newCustomerStripeSession.url }),
-      {
-        status: 201,
-      }
+      JSON.stringify({ url: newCustomerStripeSession.url })
     );
   } catch (error) {
     console.error('[STRIPE_GET]:', error);
