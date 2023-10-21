@@ -9,7 +9,7 @@ export const POST = async (req: Request) => {
     const { name, description, instructions, seed, imageUrl, categoryId } =
       body.values;
 
-    if (!user || !user.id || !user.firstName) {
+    if (!user || !user.firstName || !user.id) {
       return new NextResponse('Unauthorized.', { status: 401 });
     }
 

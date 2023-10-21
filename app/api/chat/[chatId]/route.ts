@@ -1,5 +1,5 @@
 import { StreamingTextResponse, LangChainStream } from 'ai';
-import { auth, currentUser } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs';
 import { CallbackManager } from 'langchain/callbacks';
 import { Replicate } from 'langchain/llms/replicate';
 import { NextResponse } from 'next/server';
@@ -13,13 +13,12 @@ export const POST = async (
 ) => {
   try {
     const { prompt } = await req.json();
-
-    const user = await currentUser();
-    if (!user || !user.id || !user.firstName) {
+    const { userId } = auth();
+    if (!userId) {
       return new NextResponse('Unauthorized.', { status: 401 });
     }
 
-    const identifier = `${req.url}-${user.id}`;
+    const identifier = `${req.url}-${userId}`;
     const { success } = await rateLimit(identifier);
     if (!success) {
       return new NextResponse('Rate limit exceeded.', { status: 429 });
@@ -34,7 +33,7 @@ export const POST = async (
           create: {
             content: prompt,
             role: 'user',
-            userId: user.id,
+            userId: userId,
           },
         },
       },
@@ -46,7 +45,7 @@ export const POST = async (
     const companionFileName = `${companion.id}.txt`;
     const companionKey: CompanionKey = {
       companionName: companion.id,
-      userId: user.id,
+      userId: userId,
       modelName: 'llama-13b',
     };
     const memoryManager = await MemoryManager.getInstance();
@@ -113,7 +112,7 @@ export const POST = async (
             create: {
               content: response.trim(),
               role: 'system',
-              userId: user.id,
+              userId: userId,
             },
           },
         },
